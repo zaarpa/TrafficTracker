@@ -1,5 +1,7 @@
 const User = require("../models/User.model");
 const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
+const bcrypt = require("bcrypt");
 //handle errors
 const handleErrors = (err) => {
   console.log(err.message, err.code);
@@ -63,13 +65,63 @@ const postLogin = async (req, res) => {
 
 const getLogout = async (req, res) => {
   res.cookie("jwt", "", { maxAge: 1 });
+  res.cookie("connect.sid", "", { maxAge: 1 });
   res.redirect("/login");
 };
 
+const loginWithGoogle = async (req, res) => {
+  try {
+    const token = createToken(req.user._id);
+    res.cookie("jwt", token, { httpOnly: true, maxAge: maxAge * 1000 });
+    res.redirect("/");
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({ errors });
+  }
+};
+
+const forgotPassword = async (req, res, next) => {
+  const user = await User.findOne({ email: req.body.email });
+  if (!user) {
+    return next(new Error("User not found"));
+  }
+  const resetToken = user.createPasswordResetToken();
+  await user.save({ validateBeforeSave: false });
+  const resetUrl = `${req.protocol}://${req.get(
+    "host"
+  )}/api/v1/users/resetPassword/${resetToken}`;
+  const message = `We have received a password reset request. Please use the below link to reset your password\n\n${resetUrl}`;
+  console.log(message);
+};
+
+const passwordReset = async (req, res, next) => {
+  const token = crypto
+    .createHash("sha256")
+    .update(req.params.token)
+    .digest("hex");
+  const user = await User.findOne({
+    passwordResetToken: token,
+    passwordResetTokenExpires: { $gt: Date.now() },
+  });
+  if (!user) {
+    return next(new Error("Invalid token or token expired"));
+  }
+  const salt = await bcrypt.genSalt();
+  user.password = await bcrypt.hash(req.body.password, salt);
+  console.log("ekhane ashe");
+  user.passwordResetToken = undefined;
+  console.log("undefined hoyna");
+  user.passwordResetTokenExpires = undefined;
+  await user.save();
+  res.redirect("/login");
+};
 module.exports = {
   getSignUp,
   getLogin,
   postSignUp,
   postLogin,
   getLogout,
+  loginWithGoogle,
+  forgotPassword,
+  passwordReset,
 };

@@ -38,4 +38,10 @@ const checkUser = (req, res, next) => {
     next();
   }
 };
-module.exports = { requireAuth, checkUser };
+const ensureAuthenticated = (req, res, next) => {
+  if (req.isAuthenticated()) {
+    next();
+  }
+  res.redirect("/login");
+};
+module.exports = { requireAuth, checkUser, ensureAuthenticated };
