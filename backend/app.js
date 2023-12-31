@@ -8,16 +8,12 @@ const flash = require("express-flash");
 const cors = require("cors");
 const passport = require("passport");
 const authRoutes = require("./routes/auth.routes");
+const homeRoutes = require("./routes/home.routes");
 const postRoutes = require("./routes/posts.routes");
 const passportSetup = require("./config/passport.js");
-const {
-  requireAuth,
-  checkUser,
-  ensureAuthenticated,
-} = require("./middleware/auth.middleware");
+const { requireAuth, checkUser } = require("./middleware/auth.middleware");
 
 app.use(express.json());
-// app.use("/api/posts", postRoutes);
 
 app.set("view engine", "ejs");
 app.use(express.static("public"));
@@ -50,5 +46,6 @@ app.get("*", checkUser);
 //routes
 app.use(authRoutes);
 app.use(requireAuth);
+app.use(homeRoutes);
 app.use(postRoutes);
 module.exports = app;

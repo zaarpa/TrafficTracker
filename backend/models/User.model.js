@@ -2,6 +2,8 @@ const mongoose = require("mongoose");
 const { isEmail } = require("validator");
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
+const passwordValidator =
+  /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*()-_+=])[A-Za-z\d!@#$%^&*()-_+=]{8,}$/;
 
 const UserSchema = new mongoose.Schema({
   name: {
@@ -18,7 +20,14 @@ const UserSchema = new mongoose.Schema({
   password: {
     type: String,
     required: false,
-    minlength: [6, "Minimum password length is 6 characters"],
+    minlength: [8, "Minimum password length is 8 characters"],
+    validate: {
+      validator: function (value) {
+        return passwordValidator.test(value);
+      },
+      message:
+        "Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character.",
+    },
   },
   profile_image: {
     type: String,

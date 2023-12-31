@@ -3,7 +3,7 @@ const User = require("../models/User.model");
 const requireAuth = (req, res, next) => {
   const token = req.cookies.jwt;
   if (token) {
-    jwt.verify(token, "traffic tracker secret", (err, decodedToken) => {
+    jwt.verify(token, process.env.SECRET, (err, decodedToken) => {
       if (err) {
         console.log(err.message);
         res.redirect("/login");
@@ -21,7 +21,7 @@ const requireAuth = (req, res, next) => {
 const checkUser = (req, res, next) => {
   const token = req.cookies.jwt;
   if (token) {
-    jwt.verify(token, "traffic tracker secret", async (err, decodedToken) => {
+    jwt.verify(token, process.env.SECRET, async (err, decodedToken) => {
       if (err) {
         console.log(err.message);
         res.locals.user = null;
