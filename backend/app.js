@@ -5,10 +5,16 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const flash = require("express-flash");
+const cors = require("cors");
 const passport = require("passport");
 const authRoutes = require("./routes/auth.routes");
 const postRoutes = require("./routes/posts.routes");
-const { requireAuth, checkUser } = require("./middleware/auth.middleware");
+const passportSetup = require("./config/passport.js");
+const {
+  requireAuth,
+  checkUser,
+  ensureAuthenticated,
+} = require("./middleware/auth.middleware");
 
 app.use(express.json());
 // app.use("/api/posts", postRoutes);
@@ -16,6 +22,20 @@ app.use(express.json());
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(cookieParser());
+app.use(
+  cors({
+    origin: "http://localhost:4000",
+    credentials: true,
+  })
+);
+app.use(
+  session({
+    secret: process.env.SECRET,
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
@@ -26,7 +46,9 @@ mongoose
   });
 
 app.get("*", checkUser);
-app.get("/", requireAuth, (req, res) => res.render("home"));
+
 //routes
 app.use(authRoutes);
+app.use(requireAuth);
+app.use(postRoutes);
 module.exports = app;
