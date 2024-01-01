@@ -12,12 +12,10 @@ const handleErrors = (err) => {
   if (err.message === "Incorrect password") {
     errors.password = "That password is incorrect";
   }
-  //duplicate errors
   if (err.code === 11000) {
     errors.email = "Email is already registered";
     return errors;
   }
-  //validation errors
   if (err.message.includes("User validation failed")) {
     Object.values(err.errors).forEach(({ properties }) => {
       errors[properties.path] = properties.message;
