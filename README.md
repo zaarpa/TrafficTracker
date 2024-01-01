@@ -11,10 +11,12 @@ Before running the project make sure you have installed [Node.js](https://nodejs
    npm install
    ```
 2.Include the server running port 3000 and mongoDB credentials in the `.env` file.
+
 3.Start the application
    ```bash
    npm start
    ```
+
 4.Access the application
    Open your web browser and go to `http://localhost:3000`.
 
@@ -35,6 +37,4 @@ npm install -g nodemon
 nodemon
 ```
 
-## License
-This project is licensed under the [MIT License].
 
