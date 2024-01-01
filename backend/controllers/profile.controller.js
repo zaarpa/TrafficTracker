@@ -1,5 +1,6 @@
 const User = require("../models/User.model");
 const Post = require("../models/Post.model");
+const Comment = require("../models/Comment.model");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
@@ -110,6 +111,7 @@ const deleteProfile = async (req, res) => {
       return res.status(401).json({ error: "Invalid token" });
     }
     await Post.deleteMany({ userId: userId });
+    await Comment.deleteMany({ userId: userId });
     res.cookie("jwt", "", { maxAge: 1 });
     res.cookie("connect.sid", "", { maxAge: 1 });
     await User.deleteOne({ _id: userId });

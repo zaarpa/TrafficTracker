@@ -44,7 +44,7 @@ UserSchema.post("save", function (doc, next) {
 //Before saving user document in database
 UserSchema.pre("save", async function (next) {
   if (this.password) {
-    const salt = await bcrypt.genSalt();
+    const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
   }
   next();
@@ -52,9 +52,10 @@ UserSchema.pre("save", async function (next) {
 
 // static method for login
 UserSchema.statics.login = async function (email, password) {
-  const user = await this.findOne({ email });
-
+  const user = await this.findOne({ email: email });
+  console.log(user);
   if (user) {
+    console.log(user);
     if (user.password) {
       const auth = await bcrypt.compare(password, user.password);
 

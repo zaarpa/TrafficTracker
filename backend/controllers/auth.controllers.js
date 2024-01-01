@@ -104,13 +104,13 @@ const passwordReset = async (req, res, next) => {
   if (!user) {
     return next(new Error("Invalid token or token expired"));
   }
-  const salt = await bcrypt.genSalt();
-  user.password = await bcrypt.hash(req.body.password, salt);
+  user.password = req.body.password;
   console.log("ekhane ashe");
   user.passwordResetToken = undefined;
   console.log("undefined hoyna");
   user.passwordResetTokenExpires = undefined;
   await user.save();
+  res.cookie("jwt", "", { maxAge: 1 });
   res.redirect("/login");
 };
 module.exports = {
