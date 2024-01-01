@@ -31,6 +31,6 @@ const videoStorage = multer.diskStorage({
     );
   },
 });
-const uploadVideo = multer({ preservePath: true, storage: videoStorage });
+let uploadVideo = multer({ preservePath: true, storage: videoStorage });
 
 module.exports = { uploadImage, uploadVideo };

@@ -10,6 +10,8 @@ const passport = require("passport");
 const authRoutes = require("./routes/auth.routes");
 const homeRoutes = require("./routes/home.routes");
 const postRoutes = require("./routes/posts.routes");
+const profileRoutes = require("./routes/profile.routes");
+const commentRoutes = require("./routes/comment.routes");
 const passportSetup = require("./config/passport.js");
 const { requireAuth, checkUser } = require("./middleware/auth.middleware");
 
@@ -47,5 +49,7 @@ app.get("*", checkUser);
 app.use(authRoutes);
 app.use(requireAuth);
 app.use(homeRoutes);
+app.use(profileRoutes);
 app.use(postRoutes);
+app.use(commentRoutes);
 module.exports = app;
