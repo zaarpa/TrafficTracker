@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const postController = require("../controllers/posts.controller");
-const requireImage = require("../middleware/image.middleware");
+const requireImage = require("../middleware/files.middleware");
 
 router.post("/createPost", postController.createPost);
 router.get("/getPost", postController.getPost);

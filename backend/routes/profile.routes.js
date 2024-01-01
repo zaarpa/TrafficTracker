@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const profileController = require("../controllers/profile.controller");
-const requireImage = require("../middleware/image.middleware");
+const requireImage = require("../middleware/files.middleware");
 
 router.get("/profile", profileController.getProfileInfo);
 router.get("/profiles/:id", profileController.getProfileInfos);
