@@ -37,4 +37,9 @@ npm install -g nodemon
 nodemon
 ```
 
+## Authentication
+- `jsonwebtoken` is used for token based authentication.
+- OAuth is implemented using `passport.js`
+- Make sure to install [passport.js](https://www.passportjs.org/) 
+
 
